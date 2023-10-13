@@ -1,0 +1,12 @@
+ALTER TABLE student
+ADD create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE student
+ADD active_status VARCHAR(10);
+
+ALTER TABLE subject
+ADD create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE subject
+ADD active_status VARCHAR(10);
+
