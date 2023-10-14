@@ -13,8 +13,9 @@ The Student Management System is a Spring Boot API project designed for managing
 
 The Student Management System is a Spring Boot application that provides CRUD (Create, Read, Update, Delete) operations for students data. The API documentation is available using Swagger, making it easy to explore and interact with the endpoints.
 
-ER Diagram.
-![spreadsheet-creation](https://user-images.githubusercontent.com/24537737/91602875-a8ccb200-e989-11ea-905d-309463042d72.PNG)
+ER Diagram
+
+![spreadsheet-creation](https://user-images.githubusercontent.com/5466387/275286192-37c4dc82-81a5-47f8-a69d-b657a8e426cd.png)
 
 ## Prerequisites
 
