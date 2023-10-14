@@ -2,6 +2,8 @@
 
 The Student Management System is a Spring Boot API project designed for managing students data. This README provides an overview of the project and instructions on how to set it up using Docker Compose.
 
+#### [Check out the Documentation in GitHub Pages site](https://dspchathuranga.github.io/student-manager/)
+
 ## Table of Contents
 - [Project Overview](#project-overview)
 - [Prerequisites](#prerequisites)
@@ -96,8 +98,6 @@ The API documentation is available via Swagger, which allows you to interact wit
 ## Running Tests
 
 Testing is an essential part of ensuring the quality and correctness of the Student Management System. We use [JUnit](https://junit.org/junit5/) in combination with [Spring Test](https://spring.io/guides/gs/testing/).
-
-### Prerequisites
 
 Before running the tests, make sure the `application.properties` configuration:
 
