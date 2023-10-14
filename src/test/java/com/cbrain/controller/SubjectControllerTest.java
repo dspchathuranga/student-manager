@@ -1,0 +1,229 @@
+package com.cbrain.controller;
+
+import com.cbrain.controller.dto.StudentDto;
+import com.cbrain.controller.dto.SubjectDto;
+import com.cbrain.repository.entity.StudentEntity;
+import com.cbrain.repository.entity.SubjectEntity;
+import com.cbrain.service.StudentService;
+import com.cbrain.service.SubjectService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.CoreMatchers;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
+@WebMvcTest(controllers = SubjectController.class)
+@AutoConfigureMockMvc(addFilters = false)
+@ExtendWith(MockitoExtension.class)
+class SubjectControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private SubjectService subjectService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+    private StudentEntity student;
+    private SubjectEntity subject;
+    private StudentDto studentDto;
+    private SubjectDto subjectDto;
+    private List<SubjectEntity> subjects;
+    private List<StudentEntity> students;
+    private List<StudentDto> studentDtos;
+    private List<SubjectDto> subjectDtos;
+
+    @BeforeEach
+    public void init() {
+
+        subjectDto = new SubjectDto(
+                0,
+                "English",
+                "Active");
+
+        subjectDtos = new ArrayList<>();
+        subjectDtos.add(new SubjectDto(
+                1,
+                "English",
+                "Active"));
+
+        subjectDtos.add(new SubjectDto(
+                2,
+                "Science",
+                "Inactive"));
+
+        subject = SubjectEntity.builder()
+                .subjectId(1)
+                .subjectName("English")
+                .createDate(LocalDateTime.now())
+                .activeStatus("Active")
+                .build();
+
+        subjects = new ArrayList<>();
+        subjects.add(SubjectEntity.builder()
+                .subjectName("English")
+                .createDate(LocalDateTime.now())
+                .activeStatus("Active")
+                .build());
+        subjects.add(SubjectEntity.builder()
+                .subjectName("Science")
+                .createDate(LocalDateTime.now())
+                .activeStatus("Inactive")
+                .build());
+
+        student = StudentEntity.builder()
+                .studentId(1)
+                .studentFirstName("DSP")
+                .studentLastName("Chathuranga")
+                .studentAge(33)
+                .activeStatus("Active")
+                .createDate(LocalDateTime.now())
+                .subjects(subjects)
+                .build();
+
+        studentDto = new StudentDto(0, "DSP",
+                "Chathuranga", 33,
+                "Active", subjectDtos);
+
+        studentDtos = new ArrayList<>();
+        studentDtos.add(new StudentDto(1, "DSP",
+                "Chathuranga", 33,
+                "Active", subjectDtos));
+        studentDtos.add(new StudentDto(2, "Jayani",
+                "Salgado", 21,
+                "Inactive", subjectDtos));
+
+        students = new ArrayList<>();
+        students.add(StudentEntity.builder()
+                .studentId(1)
+                .studentFirstName("DSP")
+                .studentLastName("Chathuranga")
+                .studentAge(33)
+                .activeStatus("Active")
+                .createDate(LocalDateTime.now())
+                .subjects(subjects)
+                .build());
+        students.add(StudentEntity.builder()
+                .studentId(2)
+                .studentFirstName("Jayani")
+                .studentLastName("Salgado")
+                .studentAge(31)
+                .activeStatus("Inactive")
+                .createDate(LocalDateTime.now())
+                .subjects(subjects)
+                .build());
+
+    }
+
+    @Test
+    void SubjectControllerTest_CreateSubject_ReturnSavedSubject() throws Exception{
+        given(subjectService.createSubject(ArgumentMatchers.any()))
+                .willAnswer((invocation -> invocation.getArgument(0)));
+
+        ResultActions response = mockMvc.perform(post("/api/v1/subject")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(subjectDto)));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.subjectName",
+                        CoreMatchers.is(subjectDto.subjectName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.activeStatus",
+                        CoreMatchers.is(subjectDto.activeStatus())));
+    }
+
+    @Test
+    void SubjectControllerTest_GetSubject_ReturnSubject() throws Exception{
+        int subjectId = 1;
+
+        when(subjectService.getSubject(subjectId)).thenReturn(subjectDtos.stream()
+                .filter(studentDto1 -> studentDto1.subjectId() == subjectId)
+                .toList().get(0));
+
+        ResultActions response = mockMvc.perform(get("/api/v1/subject/"+subjectId)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.subjectName",
+                        CoreMatchers.is(subjectDto.subjectName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.activeStatus",
+                        CoreMatchers.is(subjectDto.activeStatus())));
+    }
+
+    @Test
+    void SubjectControllerTest_GetAllSubjects_ReturnSubjects() throws Exception{
+        when(subjectService.getAllSubjects()).thenReturn(subjectDtos);
+
+        ResultActions response = mockMvc.perform(get("/api/v1/subject/all")
+                .contentType(MediaType.APPLICATION_JSON));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content()
+                        .string(objectMapper.writeValueAsString(subjectDtos)));
+    }
+
+    @Test
+    void SubjectControllerTest_GetAllSubjectsByActiveStatus_ReturnSubjects() throws Exception{
+        String activeStatus = "Active";
+        when(subjectService.getAllSubjectsByActiveStatus(activeStatus))
+                .thenReturn(subjectDtos.stream().filter(
+                                subjectDto1 -> subjectDto1.activeStatus() == activeStatus)
+                        .toList());
+
+        ResultActions response = mockMvc.perform(get("/api/v1/subject/byStatus")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("activeStatus", activeStatus));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content()
+                        .string(objectMapper.writeValueAsString(subjectDtos.stream().filter(
+                                        subjectDto1 -> subjectDto1.activeStatus() == activeStatus)
+                                .toList())));
+    }
+
+    @Test
+    void SubjectControllerTest_UpdateSubject_ReturnSubject() throws Exception{
+        int subjectId = 1;
+
+        when(subjectService.updateSubject(subjectId,subjectDto)).thenReturn(subjectDto);
+
+        ResultActions response = mockMvc.perform(put("/api/v1/subject/"+subjectId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(subjectDto)));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content()
+                        .string(objectMapper.writeValueAsString(subjectDto)));
+    }
+
+    @Test
+    void SubjectControllerTest_DeleteSubject() throws Exception{
+        int subjectId = 1;
+        doNothing().when(subjectService).deleteSubject(subjectId);
+
+        ResultActions response = mockMvc.perform(delete("/api/v1/subject/"+subjectId)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk());
+    }
+}

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -30,10 +29,10 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentDto getStudent(Integer studentId) {
-        Optional<StudentEntity> studentEntity = studentRepository.findById(studentId);
-        if (!studentEntity.isEmpty()) {
+        StudentEntity studentEntity = studentRepository.findById(studentId).orElse(null);
+        if (studentEntity != null) {
             return ObjectMapperUtility.mapToStudentDto(
-                    studentEntity.get()
+                    studentEntity
             );
         } else {
             // Set the HTTP 404 Not Found status
