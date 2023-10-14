@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.cbrain</groupId>
 	<artifactId>student-manager</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>student-manager</name>
 	<description>Student Manager Application</description>
 	<properties>
