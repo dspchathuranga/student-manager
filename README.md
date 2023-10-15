@@ -41,7 +41,7 @@ To get started with the Student Management System, follow these steps:
 2. Build the project using Maven:
 
     ```sh
-    cd student-management-system
+    cd student-management
     mvn clean install -DskipTests
     ```
 
