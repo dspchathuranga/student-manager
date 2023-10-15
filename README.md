@@ -45,7 +45,7 @@ To get started with the Student Management System, follow these steps:
     mvn clean install -DskipTests
     ```
 
-3. You can change environment variables `docker-compose.yml` file in the project directory:
+3. You can change environment variables `docker-compose.yaml` file in the project directory:
 
     ```yaml
     version: '3.8'
