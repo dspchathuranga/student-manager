@@ -1,6 +1,7 @@
 package com.cbrain.service.impl;
 
-import com.cbrain.controller.dto.StudentDto;
+import com.cbrain.controller.dto.StudentRequestDto;
+import com.cbrain.controller.dto.StudentResponseDto;
 import com.cbrain.repository.StudentRepository;
 import com.cbrain.repository.entity.StudentEntity;
 import com.cbrain.service.StudentService;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -19,16 +21,16 @@ public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
 
     @Override
-    public StudentDto createStudent(StudentDto studentDto) {
+    public StudentResponseDto createStudent(StudentRequestDto studentRequestDto) {
         return ObjectMapperUtility.mapToStudentDto(
                 studentRepository.save(
-                        ObjectMapperUtility.mapToStudentEntity(studentDto)
+                        ObjectMapperUtility.mapToStudentEntity(studentRequestDto)
                 )
         );
     }
 
     @Override
-    public StudentDto getStudent(Integer studentId) {
+    public StudentResponseDto getStudent(Integer studentId) {
         StudentEntity studentEntity = studentRepository.findById(studentId).orElse(null);
         if (studentEntity != null) {
             return ObjectMapperUtility.mapToStudentDto(
@@ -42,10 +44,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentDto updateStudent(Integer studentId, StudentDto studentDto) {
+    public StudentResponseDto updateStudent(Integer studentId, StudentRequestDto studentRequestDto) {
         return ObjectMapperUtility.mapToStudentDto(
                 studentRepository.save(
-                        ObjectMapperUtility.mapToStudentEntity(studentId, studentDto)
+                        ObjectMapperUtility.mapToStudentEntity(studentId, studentRequestDto)
                 )
         );
     }
@@ -56,14 +58,14 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<StudentDto> getAllStudents() {
+    public List<StudentResponseDto> getAllStudents() {
         return studentRepository.findAll().stream().map(
                 studentEntity -> ObjectMapperUtility.mapToStudentDto(studentEntity)
         ).toList();
     }
 
     @Override
-    public List<StudentDto> getAllStudentsByActiveStatus(String activeStatus) {
+    public List<StudentResponseDto> getAllStudentsByActiveStatus(String activeStatus) {
         return studentRepository.findAllByActiveStatus(activeStatus).stream().map(
                 studentEntity -> ObjectMapperUtility.mapToStudentDto(studentEntity)
         ).toList();

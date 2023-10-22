@@ -1,7 +1,9 @@
 package com.cbrain.utils;
 
-import com.cbrain.controller.dto.StudentDto;
-import com.cbrain.controller.dto.SubjectDto;
+import com.cbrain.controller.dto.StudentRequestDto;
+import com.cbrain.controller.dto.StudentResponseDto;
+import com.cbrain.controller.dto.SubjectRequestDto;
+import com.cbrain.controller.dto.SubjectResponseDto;
 import com.cbrain.repository.entity.StudentEntity;
 import com.cbrain.repository.entity.SubjectEntity;
 
@@ -10,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectMapperUtility {
-    public static StudentDto mapToStudentDto(StudentEntity studentEntity, List<SubjectEntity> subjectEntities) {
-        StudentDto studentDto = new StudentDto(
+    public static StudentResponseDto mapToStudentDto(StudentEntity studentEntity, List<SubjectEntity> subjectEntities) {
+        StudentResponseDto studentResponseDto = new StudentResponseDto(
                 studentEntity.getStudentId(),
                 studentEntity.getStudentFirstName(),
                 studentEntity.getStudentLastName(),
@@ -19,11 +21,11 @@ public class ObjectMapperUtility {
                 studentEntity.getActiveStatus(),
                 subjectEntities.stream().map(subject -> mapToSubjectDto(subject)).toList()
         );
-        return studentDto;
+        return studentResponseDto;
     }
 
-    public static StudentDto mapToStudentDto(StudentEntity studentEntity) {
-        StudentDto studentDto = new StudentDto(
+    public static StudentResponseDto mapToStudentDto(StudentEntity studentEntity) {
+        StudentResponseDto studentResponseDto = new StudentResponseDto(
                 studentEntity.getStudentId(),
                 studentEntity.getStudentFirstName(),
                 studentEntity.getStudentLastName(),
@@ -31,56 +33,62 @@ public class ObjectMapperUtility {
                 studentEntity.getActiveStatus(),
                 studentEntity.getSubjects().stream().map(subjectEntity -> mapToSubjectDto(subjectEntity)).toList()
         );
-        return studentDto;
+        return studentResponseDto;
     }
 
-    public static SubjectDto mapToSubjectDto(SubjectEntity subjectEntities) {
-        return new SubjectDto(
+    public static SubjectResponseDto mapToSubjectDto(SubjectEntity subjectEntities) {
+        return new SubjectResponseDto(
                 subjectEntities.getSubjectId(),
                 subjectEntities.getSubjectName(),
                 subjectEntities.getActiveStatus()
         );
     }
 
-    public static SubjectEntity mapToSubjectEntity(SubjectDto subjectDto) {
+    public static SubjectEntity mapToSubjectEntity(SubjectRequestDto subjectRequestDto) {
         return SubjectEntity.builder()
-                .subjectId(subjectDto.subjectId())
-                .subjectName(subjectDto.subjectName())
-                .activeStatus(subjectDto.activeStatus())
+                .subjectId(0)
+                .subjectName(subjectRequestDto.subjectName())
+                .activeStatus(subjectRequestDto.activeStatus())
                 .createDate(LocalDateTime.now())
                 .build();
     }
 
-    public static SubjectEntity mapToSubjectEntity(Integer subjectId, SubjectDto subjectDto) {
+    public static SubjectEntity mapToSubjectEntity(Integer subjectId) {
         return SubjectEntity.builder()
                 .subjectId(subjectId)
-                .subjectName(subjectDto.subjectName())
-                .activeStatus(subjectDto.activeStatus())
+                .build();
+    }
+
+    public static SubjectEntity mapToSubjectEntity(Integer subjectId, SubjectRequestDto subjectRequestDto) {
+        return SubjectEntity.builder()
+                .subjectId(subjectId)
+                .subjectName(subjectRequestDto.subjectName())
+                .activeStatus(subjectRequestDto.activeStatus())
                 .createDate(LocalDateTime.now())
                 .build();
     }
 
-    public static StudentEntity mapToStudentEntity(StudentDto studentDto) {
+    public static StudentEntity mapToStudentEntity(StudentRequestDto studentRequestDto) {
         return StudentEntity.builder()
-                .studentId(studentDto.studentId())
-                .studentFirstName(studentDto.studentFirstName())
-                .studentLastName(studentDto.studentLastName())
-                .studentAge(studentDto.studentAge())
-                .activeStatus(studentDto.activeStatus())
+                .studentId(0)
+                .studentFirstName(studentRequestDto.studentFirstName())
+                .studentLastName(studentRequestDto.studentLastName())
+                .studentAge(studentRequestDto.studentAge())
+                .activeStatus(studentRequestDto.activeStatus())
                 .createDate(LocalDateTime.now())
-                .subjects(studentDto.studentSubjects().stream().map(subjectDto -> mapToSubjectEntity(subjectDto)).toList())
+                .subjects(studentRequestDto.studentSubjectIds().stream().map(subjectId -> mapToSubjectEntity(subjectId)).toList())
                 .build();
     }
 
-    public static StudentEntity mapToStudentEntity(Integer studentId, StudentDto studentDto) {
+    public static StudentEntity mapToStudentEntity(Integer studentId, StudentRequestDto studentRequestDto) {
         return StudentEntity.builder()
                 .studentId(studentId)
-                .studentFirstName(studentDto.studentFirstName())
-                .studentLastName(studentDto.studentLastName())
-                .studentAge(studentDto.studentAge())
-                .activeStatus(studentDto.activeStatus())
+                .studentFirstName(studentRequestDto.studentFirstName())
+                .studentLastName(studentRequestDto.studentLastName())
+                .studentAge(studentRequestDto.studentAge())
+                .activeStatus(studentRequestDto.activeStatus())
                 .createDate(LocalDateTime.now())
-                .subjects(studentDto.studentSubjects().stream().map(subjectDto -> mapToSubjectEntity(subjectDto)).toList())
+                .subjects(studentRequestDto.studentSubjectIds().stream().map(subjectId -> mapToSubjectEntity(subjectId)).toList())
                 .build();
     }
 }

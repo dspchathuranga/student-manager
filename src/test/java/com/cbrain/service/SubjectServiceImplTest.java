@@ -1,10 +1,8 @@
 package com.cbrain.service;
 
-import com.cbrain.controller.dto.StudentDto;
-import com.cbrain.controller.dto.SubjectDto;
-import com.cbrain.repository.StudentRepository;
+import com.cbrain.controller.dto.SubjectRequestDto;
+import com.cbrain.controller.dto.SubjectResponseDto;
 import com.cbrain.repository.SubjectRepository;
-import com.cbrain.repository.entity.StudentEntity;
 import com.cbrain.repository.entity.SubjectEntity;
 import com.cbrain.service.impl.SubjectServiceImpl;
 import org.assertj.core.api.Assertions;
@@ -14,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
@@ -25,7 +22,6 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,7 +34,7 @@ class SubjectServiceImplTest {
     private SubjectServiceImpl subjectService;
     private SubjectEntity subject;
 
-    private SubjectDto subjectDto;
+    private SubjectRequestDto subjectRequestDto;
     private List<SubjectEntity> subjects;
 
 
@@ -66,8 +62,7 @@ class SubjectServiceImplTest {
                 .activeStatus("Inactive")
                 .build());
 
-        subjectDto = new SubjectDto(
-                0,
+        subjectRequestDto = new SubjectRequestDto(
                 "English",
                 "Active");
 
@@ -78,7 +73,7 @@ class SubjectServiceImplTest {
 
         when(subjectRepository.save(any(SubjectEntity.class))).thenReturn(subject);
 
-        SubjectDto savedSubject = subjectService.createSubject(subjectDto);
+        SubjectResponseDto savedSubject = subjectService.createSubject(subjectRequestDto);
 
         Assertions.assertThat(savedSubject).isNotNull();
         Assertions.assertThat(savedSubject.subjectId()).isGreaterThan(0);
@@ -90,7 +85,7 @@ class SubjectServiceImplTest {
 
         when(subjectRepository.findById(subjectId)).thenReturn(Optional.of(subject));
 
-        SubjectDto getSubject = subjectService.getSubject(subjectId);
+        SubjectResponseDto getSubject = subjectService.getSubject(subjectId);
 
         Assertions.assertThat(getSubject).isNotNull();
         Assertions.assertThat(getSubject.subjectName()).isEqualTo("English");
@@ -102,11 +97,10 @@ class SubjectServiceImplTest {
 
         when(subjectRepository.save(any(SubjectEntity.class))).thenReturn(subjects.get(1));
 
-        subjectDto = new SubjectDto(
-                2,
+        subjectRequestDto = new SubjectRequestDto(
                 "Science",
                 "Inactive");
-        SubjectDto updatedSubject = subjectService.updateSubject(subjectId, subjectDto);
+        SubjectResponseDto updatedSubject = subjectService.updateSubject(subjectId, subjectRequestDto);
 
         Assertions.assertThat(updatedSubject).isNotNull();
         Assertions.assertThat(updatedSubject.activeStatus()).isEqualTo("Inactive");
@@ -127,7 +121,7 @@ class SubjectServiceImplTest {
 
         when(subjectRepository.findAllByActiveStatus(activeStatus)).thenReturn(Collections.singletonList(subject));
 
-        List<SubjectDto> getSubjects = subjectService.getAllSubjectsByActiveStatus(activeStatus);
+        List<SubjectResponseDto> getSubjects = subjectService.getAllSubjectsByActiveStatus(activeStatus);
 
         Assertions.assertThat(getSubjects).isNotNull();
         Assertions.assertThat(getSubjects.size()).isEqualTo(1);
@@ -138,7 +132,7 @@ class SubjectServiceImplTest {
 
         when(subjectRepository.findAll()).thenReturn(subjects);
 
-        List<SubjectDto> getSubjects = subjectService.getAllSubjects();
+        List<SubjectResponseDto> getSubjects = subjectService.getAllSubjects();
 
         Assertions.assertThat(getSubjects).isNotNull();
         Assertions.assertThat(getSubjects.size()).isEqualTo(2);

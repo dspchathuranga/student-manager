@@ -1,8 +1,5 @@
 package com.cbrain.repository;
 
-import com.cbrain.controller.dto.StudentDto;
-import com.cbrain.controller.dto.SubjectDto;
-import com.cbrain.repository.entity.StudentEntity;
 import com.cbrain.repository.entity.SubjectEntity;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)

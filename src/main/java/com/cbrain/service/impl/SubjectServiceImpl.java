@@ -1,6 +1,7 @@
 package com.cbrain.service.impl;
 
-import com.cbrain.controller.dto.SubjectDto;
+import com.cbrain.controller.dto.SubjectRequestDto;
+import com.cbrain.controller.dto.SubjectResponseDto;
 import com.cbrain.repository.StudentRepository;
 import com.cbrain.repository.SubjectRepository;
 import com.cbrain.repository.entity.StudentEntity;
@@ -23,26 +24,26 @@ public class SubjectServiceImpl implements SubjectService {
     private final StudentRepository studentRepository;
 
     @Override
-    public SubjectDto createSubject(SubjectDto subjectDto) {
+    public SubjectResponseDto createSubject(SubjectRequestDto subjectRequestDto) {
         return ObjectMapperUtility.mapToSubjectDto(
                 subjectRepository.save(
-                    ObjectMapperUtility.mapToSubjectEntity(subjectDto)
+                    ObjectMapperUtility.mapToSubjectEntity(subjectRequestDto)
                 )
         );
     }
 
     @Override
-    public SubjectDto getSubject(Integer subjectId) {
+    public SubjectResponseDto getSubject(Integer subjectId) {
         return ObjectMapperUtility.mapToSubjectDto(
                 subjectRepository.findById(subjectId).get()
         );
     }
 
     @Override
-    public SubjectDto updateSubject(Integer subjectId, SubjectDto subjectDto) {
+    public SubjectResponseDto updateSubject(Integer subjectId, SubjectRequestDto subjectRequestDto) {
         return ObjectMapperUtility.mapToSubjectDto(
                 subjectRepository.save(
-                        ObjectMapperUtility.mapToSubjectEntity(subjectId,subjectDto)
+                        ObjectMapperUtility.mapToSubjectEntity(subjectId,subjectRequestDto)
                 )
         );
     }
@@ -67,14 +68,14 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public List<SubjectDto> getAllSubjectsByActiveStatus(String activeStatus) {
+    public List<SubjectResponseDto> getAllSubjectsByActiveStatus(String activeStatus) {
         return subjectRepository.findAllByActiveStatus(activeStatus).stream().map(
                 subjectEntity -> ObjectMapperUtility.mapToSubjectDto(subjectEntity)
         ).toList();
     }
 
     @Override
-    public List<SubjectDto> getAllSubjects() {
+    public List<SubjectResponseDto> getAllSubjects() {
         return subjectRepository.findAll().stream().map(
                 subjectEntity -> ObjectMapperUtility.mapToSubjectDto(subjectEntity)
         ).toList();
