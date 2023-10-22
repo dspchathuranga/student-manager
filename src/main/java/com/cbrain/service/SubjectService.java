@@ -1,19 +1,20 @@
 package com.cbrain.service;
 
-import com.cbrain.controller.dto.SubjectDto;
+import com.cbrain.controller.dto.SubjectRequestDto;
+import com.cbrain.controller.dto.SubjectResponseDto;
 
 import java.util.List;
 
 public interface SubjectService {
-    SubjectDto createSubject(SubjectDto subjectDto);
+    SubjectResponseDto createSubject(SubjectRequestDto subjectRequestDto);
 
-    SubjectDto getSubject(Integer subjectId);
+    SubjectResponseDto getSubject(Integer subjectId);
 
-    SubjectDto updateSubject(Integer subjectId, SubjectDto subjectDto);
+    SubjectResponseDto updateSubject(Integer subjectId, SubjectRequestDto subjectRequestDto);
 
     void deleteSubject(Integer subjectId);
 
-    List<SubjectDto> getAllSubjectsByActiveStatus(String activeStatus);
+    List<SubjectResponseDto> getAllSubjectsByActiveStatus(String activeStatus);
 
-    List<SubjectDto> getAllSubjects();
+    List<SubjectResponseDto> getAllSubjects();
 }

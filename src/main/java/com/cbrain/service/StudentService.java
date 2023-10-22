@@ -1,19 +1,20 @@
 package com.cbrain.service;
 
-import com.cbrain.controller.dto.StudentDto;
+import com.cbrain.controller.dto.StudentRequestDto;
+import com.cbrain.controller.dto.StudentResponseDto;
 
 import java.util.List;
 
 public interface StudentService {
-    StudentDto createStudent(StudentDto studentDto);
+    StudentResponseDto createStudent(StudentRequestDto studentRequestDto);
 
-    StudentDto getStudent(Integer studentId);
+    StudentResponseDto getStudent(Integer studentId);
 
-    StudentDto updateStudent(Integer studentId, StudentDto studentDto);
+    StudentResponseDto updateStudent(Integer studentId, StudentRequestDto studentRequestDto);
 
     void deleteStudent(Integer studentId);
 
-    List<StudentDto> getAllStudents();
+    List<StudentResponseDto> getAllStudents();
 
-    List<StudentDto> getAllStudentsByActiveStatus(String activeStatus);
+    List<StudentResponseDto> getAllStudentsByActiveStatus(String activeStatus);
 }
