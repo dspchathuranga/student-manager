@@ -1,16 +1,14 @@
 package com.cbrain.controller;
 
-import com.cbrain.controller.dto.StudentDto;
+import com.cbrain.controller.dto.StudentRequestDto;
+import com.cbrain.controller.dto.StudentResponseDto;
 import com.cbrain.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.core.annotations.RouterOperation;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,8 +30,8 @@ public class StudentController {
                     @ApiResponse(responseCode = "401", description = "Invalid credentials / Token not found"),
                     @ApiResponse(responseCode = "403", description = "Invalid permissions") })
     @PostMapping
-    public StudentDto createStudent(@RequestBody StudentDto studentDto) {
-        return studentService.createStudent(studentDto);
+    public StudentResponseDto createStudent(@RequestBody StudentRequestDto studentRequestDto) {
+        return studentService.createStudent(studentRequestDto);
     }
 
     @Operation(operationId = "getStudentByStudentId", summary = "Get Student by studentId", tags = { "Student" },
@@ -46,7 +44,7 @@ public class StudentController {
                     @ApiResponse(responseCode = "403", description = "Invalid permissions"),
                     @ApiResponse(responseCode = "404", description = "Student not found") })
     @GetMapping("/{studentId}")
-    public StudentDto getStudent(@PathVariable Integer studentId) {
+    public StudentResponseDto getStudent(@PathVariable Integer studentId) {
         return studentService.getStudent(studentId);
     }
 
@@ -58,7 +56,7 @@ public class StudentController {
                     @ApiResponse(responseCode = "403", description = "Invalid permissions"),
                     @ApiResponse(responseCode = "404", description = "Students not found") })
     @GetMapping("/all")
-    public List<StudentDto> getAllStudents() {
+    public List<StudentResponseDto> getAllStudents() {
         return studentService.getAllStudents();
     }
 
@@ -72,7 +70,7 @@ public class StudentController {
                     @ApiResponse(responseCode = "403", description = "Invalid permissions"),
                     @ApiResponse(responseCode = "404", description = "Students not found") })
     @GetMapping("/byStatus")
-    public List<StudentDto> getAllStudentsByActiveStatus(@RequestParam String activeStatus) {
+    public List<StudentResponseDto> getAllStudentsByActiveStatus(@RequestParam String activeStatus) {
         return studentService.getAllStudentsByActiveStatus(activeStatus);
     }
 
@@ -87,8 +85,8 @@ public class StudentController {
                     @ApiResponse(responseCode = "403", description = "Invalid permissions"),
                     @ApiResponse(responseCode = "404", description = "Student not found") })
     @PutMapping("/{studentId}")
-    public StudentDto updateStudent(@PathVariable Integer studentId, @RequestBody StudentDto studentDto) {
-        return studentService.updateStudent(studentId, studentDto);
+    public StudentResponseDto updateStudent(@PathVariable Integer studentId, @RequestBody StudentRequestDto studentRequestDto) {
+        return studentService.updateStudent(studentId, studentRequestDto);
     }
 
     @Operation(operationId = "deleteStudentByStudentId", summary = "Delete Student by studentId", tags = { "Student" },

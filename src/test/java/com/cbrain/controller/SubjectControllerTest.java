@@ -1,10 +1,8 @@
 package com.cbrain.controller;
 
-import com.cbrain.controller.dto.StudentDto;
-import com.cbrain.controller.dto.SubjectDto;
-import com.cbrain.repository.entity.StudentEntity;
-import com.cbrain.repository.entity.SubjectEntity;
-import com.cbrain.service.StudentService;
+
+import com.cbrain.controller.dto.SubjectRequestDto;
+import com.cbrain.controller.dto.SubjectResponseDto;
 import com.cbrain.service.SubjectService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
@@ -26,7 +24,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -45,118 +42,54 @@ class SubjectControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-    private StudentEntity student;
-    private SubjectEntity subject;
-    private StudentDto studentDto;
-    private SubjectDto subjectDto;
-    private List<SubjectEntity> subjects;
-    private List<StudentEntity> students;
-    private List<StudentDto> studentDtos;
-    private List<SubjectDto> subjectDtos;
+    private SubjectResponseDto subjectResponseDto;
+    private SubjectRequestDto subjectRequestDto;
+    private List<SubjectResponseDto> subjectResponseDtos;
 
     @BeforeEach
     public void init() {
 
-        subjectDto = new SubjectDto(
-                0,
+        subjectRequestDto = new SubjectRequestDto(
                 "English",
                 "Active");
 
-        subjectDtos = new ArrayList<>();
-        subjectDtos.add(new SubjectDto(
+        subjectResponseDtos = new ArrayList<>();
+        subjectResponseDtos.add(new SubjectResponseDto(
                 1,
                 "English",
                 "Active"));
-
-        subjectDtos.add(new SubjectDto(
+        subjectResponseDtos.add(new SubjectResponseDto(
                 2,
                 "Science",
                 "Inactive"));
 
-        subject = SubjectEntity.builder()
-                .subjectId(1)
-                .subjectName("English")
-                .createDate(LocalDateTime.now())
-                .activeStatus("Active")
-                .build();
-
-        subjects = new ArrayList<>();
-        subjects.add(SubjectEntity.builder()
-                .subjectName("English")
-                .createDate(LocalDateTime.now())
-                .activeStatus("Active")
-                .build());
-        subjects.add(SubjectEntity.builder()
-                .subjectName("Science")
-                .createDate(LocalDateTime.now())
-                .activeStatus("Inactive")
-                .build());
-
-        student = StudentEntity.builder()
-                .studentId(1)
-                .studentFirstName("DSP")
-                .studentLastName("Chathuranga")
-                .studentAge(33)
-                .activeStatus("Active")
-                .createDate(LocalDateTime.now())
-                .subjects(subjects)
-                .build();
-
-        studentDto = new StudentDto(0, "DSP",
-                "Chathuranga", 33,
-                "Active", subjectDtos);
-
-        studentDtos = new ArrayList<>();
-        studentDtos.add(new StudentDto(1, "DSP",
-                "Chathuranga", 33,
-                "Active", subjectDtos));
-        studentDtos.add(new StudentDto(2, "Jayani",
-                "Salgado", 21,
-                "Inactive", subjectDtos));
-
-        students = new ArrayList<>();
-        students.add(StudentEntity.builder()
-                .studentId(1)
-                .studentFirstName("DSP")
-                .studentLastName("Chathuranga")
-                .studentAge(33)
-                .activeStatus("Active")
-                .createDate(LocalDateTime.now())
-                .subjects(subjects)
-                .build());
-        students.add(StudentEntity.builder()
-                .studentId(2)
-                .studentFirstName("Jayani")
-                .studentLastName("Salgado")
-                .studentAge(31)
-                .activeStatus("Inactive")
-                .createDate(LocalDateTime.now())
-                .subjects(subjects)
-                .build());
+        subjectResponseDto = new SubjectResponseDto(
+                1,
+                "English",
+                "Active");
 
     }
 
     @Test
     void SubjectControllerTest_CreateSubject_ReturnSavedSubject() throws Exception{
-        given(subjectService.createSubject(ArgumentMatchers.any()))
-                .willAnswer((invocation -> invocation.getArgument(0)));
+        when(subjectService.createSubject(subjectRequestDto)).thenReturn(subjectResponseDto);
 
         ResultActions response = mockMvc.perform(post("/api/v1/subject")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(subjectDto)));
+                .content(objectMapper.writeValueAsString(subjectRequestDto)));
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.subjectName",
-                        CoreMatchers.is(subjectDto.subjectName())))
+                        CoreMatchers.is(subjectResponseDto.subjectName())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.activeStatus",
-                        CoreMatchers.is(subjectDto.activeStatus())));
+                        CoreMatchers.is(subjectResponseDto.activeStatus())));
     }
 
     @Test
     void SubjectControllerTest_GetSubject_ReturnSubject() throws Exception{
         int subjectId = 1;
 
-        when(subjectService.getSubject(subjectId)).thenReturn(subjectDtos.stream()
+        when(subjectService.getSubject(subjectId)).thenReturn(subjectResponseDtos.stream()
                 .filter(studentDto1 -> studentDto1.subjectId() == subjectId)
                 .toList().get(0));
 
@@ -165,28 +98,28 @@ class SubjectControllerTest {
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.subjectName",
-                        CoreMatchers.is(subjectDto.subjectName())))
+                        CoreMatchers.is(subjectResponseDto.subjectName())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.activeStatus",
-                        CoreMatchers.is(subjectDto.activeStatus())));
+                        CoreMatchers.is(subjectResponseDto.activeStatus())));
     }
 
     @Test
     void SubjectControllerTest_GetAllSubjects_ReturnSubjects() throws Exception{
-        when(subjectService.getAllSubjects()).thenReturn(subjectDtos);
+        when(subjectService.getAllSubjects()).thenReturn(subjectResponseDtos);
 
         ResultActions response = mockMvc.perform(get("/api/v1/subject/all")
                 .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content()
-                        .string(objectMapper.writeValueAsString(subjectDtos)));
+                        .string(objectMapper.writeValueAsString(subjectResponseDtos)));
     }
 
     @Test
     void SubjectControllerTest_GetAllSubjectsByActiveStatus_ReturnSubjects() throws Exception{
         String activeStatus = "Active";
         when(subjectService.getAllSubjectsByActiveStatus(activeStatus))
-                .thenReturn(subjectDtos.stream().filter(
+                .thenReturn(subjectResponseDtos.stream().filter(
                                 subjectDto1 -> subjectDto1.activeStatus() == activeStatus)
                         .toList());
 
@@ -196,7 +129,7 @@ class SubjectControllerTest {
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content()
-                        .string(objectMapper.writeValueAsString(subjectDtos.stream().filter(
+                        .string(objectMapper.writeValueAsString(subjectResponseDtos.stream().filter(
                                         subjectDto1 -> subjectDto1.activeStatus() == activeStatus)
                                 .toList())));
     }
@@ -205,15 +138,15 @@ class SubjectControllerTest {
     void SubjectControllerTest_UpdateSubject_ReturnSubject() throws Exception{
         int subjectId = 1;
 
-        when(subjectService.updateSubject(subjectId,subjectDto)).thenReturn(subjectDto);
+        when(subjectService.updateSubject(subjectId,subjectRequestDto)).thenReturn(subjectResponseDto);
 
         ResultActions response = mockMvc.perform(put("/api/v1/subject/"+subjectId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(subjectDto)));
+                .content(objectMapper.writeValueAsString(subjectRequestDto)));
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content()
-                        .string(objectMapper.writeValueAsString(subjectDto)));
+                        .string(objectMapper.writeValueAsString(subjectResponseDto)));
     }
 
     @Test

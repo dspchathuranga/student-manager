@@ -1,6 +1,7 @@
 package com.cbrain.controller;
 
-import com.cbrain.controller.dto.SubjectDto;
+import com.cbrain.controller.dto.SubjectRequestDto;
+import com.cbrain.controller.dto.SubjectResponseDto;
 import com.cbrain.service.SubjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,8 +32,8 @@ public class SubjectController {
                     @ApiResponse(responseCode = "401", description = "Invalid credentials / Token not found"),
                     @ApiResponse(responseCode = "403", description = "Invalid permissions") })
     @PostMapping
-    public SubjectDto createSubject(@RequestBody SubjectDto subjectDto) {
-        return subjectService.createSubject(subjectDto);
+    public SubjectResponseDto createSubject(@RequestBody SubjectRequestDto subjectRequestDto) {
+        return subjectService.createSubject(subjectRequestDto);
     }
 
     @Operation(operationId = "getSubjectBySubjectId", summary = "Get Subject by subjectId", tags = { "Subject" },
@@ -45,7 +46,7 @@ public class SubjectController {
                     @ApiResponse(responseCode = "403", description = "Invalid permissions"),
                     @ApiResponse(responseCode = "404", description = "Subject not found") })
     @GetMapping("/{subjectId}")
-    public SubjectDto getSubject(@PathVariable Integer subjectId) {
+    public SubjectResponseDto getSubject(@PathVariable Integer subjectId) {
         return subjectService.getSubject(subjectId);
     }
 
@@ -57,7 +58,7 @@ public class SubjectController {
                     @ApiResponse(responseCode = "403", description = "Invalid permissions"),
                     @ApiResponse(responseCode = "404", description = "Subject not found") })
     @GetMapping("/all")
-    public List<SubjectDto> getAllSubjects() {
+    public List<SubjectResponseDto> getAllSubjects() {
         return subjectService.getAllSubjects();
     }
 
@@ -71,7 +72,7 @@ public class SubjectController {
                     @ApiResponse(responseCode = "403", description = "Invalid permissions"),
                     @ApiResponse(responseCode = "404", description = "Subject not found") })
     @GetMapping("/byStatus")
-    public List<SubjectDto> getAllSubjectsByActiveStatus(@RequestParam String activeStatus) {
+    public List<SubjectResponseDto> getAllSubjectsByActiveStatus(@RequestParam String activeStatus) {
         return subjectService.getAllSubjectsByActiveStatus(activeStatus);
     }
 
@@ -86,8 +87,8 @@ public class SubjectController {
                     @ApiResponse(responseCode = "403", description = "Invalid permissions"),
                     @ApiResponse(responseCode = "404", description = "Subject not found") })
     @PutMapping("/{subjectId}")
-    public SubjectDto updateSubject(@PathVariable Integer subjectId, @RequestBody SubjectDto subjectDto) {
-        return subjectService.updateSubject(subjectId, subjectDto);
+    public SubjectResponseDto updateSubject(@PathVariable Integer subjectId, @RequestBody SubjectRequestDto subjectRequestDto) {
+        return subjectService.updateSubject(subjectId, subjectRequestDto);
     }
 
     @Operation(operationId = "deleteSubjectBySubjectId", summary = "Delete Subject by subjectId", tags = { "Subject" },

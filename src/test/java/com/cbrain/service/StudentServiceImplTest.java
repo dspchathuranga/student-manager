@@ -1,6 +1,7 @@
 package com.cbrain.service;
 
-import com.cbrain.controller.dto.StudentDto;
+import com.cbrain.controller.dto.StudentRequestDto;
+import com.cbrain.controller.dto.StudentResponseDto;
 import com.cbrain.repository.StudentRepository;
 import com.cbrain.repository.entity.StudentEntity;
 import com.cbrain.repository.entity.SubjectEntity;
@@ -32,7 +33,7 @@ class StudentServiceImplTest {
     private StudentServiceImpl studentService;
 
     private StudentEntity student;
-    private StudentDto studentDto;
+    private StudentRequestDto studentRequestDto;
     private List<StudentEntity> students;
 
     private List<SubjectEntity> subjects;
@@ -61,7 +62,7 @@ class StudentServiceImplTest {
                 .subjects(subjects)
                 .build();
 
-        studentDto = new StudentDto(0, "DSP",
+        studentRequestDto = new StudentRequestDto("DSP",
                 "Chathuranga", 33,
                 "Active", new ArrayList<>());
 
@@ -98,13 +99,13 @@ class StudentServiceImplTest {
                 .subjects(new ArrayList<>())
                 .build();
 
-        StudentDto studentDto = new StudentDto(0, "DSP",
+        StudentRequestDto studentRequestDto = new StudentRequestDto("DSP",
                 "Chathuranga", 33,
                 "Active", new ArrayList<>());
 
         when(studentRepository.save(any(StudentEntity.class))).thenReturn(student);
 
-        StudentDto savedStudent = studentService.createStudent(studentDto);
+        StudentResponseDto savedStudent = studentService.createStudent(studentRequestDto);
 
         Assertions.assertThat(savedStudent).isNotNull();
         Assertions.assertThat(savedStudent.studentId()).isGreaterThan(0);
@@ -116,7 +117,7 @@ class StudentServiceImplTest {
 
         when(studentRepository.findById(studentId)).thenReturn(Optional.of(student));
 
-        StudentDto getStudent = studentService.getStudent(studentId);
+        StudentResponseDto getStudent = studentService.getStudent(studentId);
 
         Assertions.assertThat(getStudent).isNotNull();
         Assertions.assertThat(getStudent.studentFirstName()).isEqualTo("DSP");
@@ -129,10 +130,10 @@ class StudentServiceImplTest {
         student.setActiveStatus("Inactive");
         when(studentRepository.save(any(StudentEntity.class))).thenReturn(student);
 
-        studentDto = new StudentDto(0, "DSP",
+        studentRequestDto = new StudentRequestDto("DSP",
                 "Chathuranga", 33,
                 "Inactive", new ArrayList<>());
-        StudentDto updatedStudent = studentService.updateStudent(studentId, studentDto);
+        StudentResponseDto updatedStudent = studentService.updateStudent(studentId, studentRequestDto);
 
         Assertions.assertThat(updatedStudent).isNotNull();
         Assertions.assertThat(updatedStudent.activeStatus()).isEqualTo("Inactive");
@@ -152,7 +153,7 @@ class StudentServiceImplTest {
 
         when(studentRepository.findAll()).thenReturn(students);
 
-        List<StudentDto> getStudents = studentService.getAllStudents();
+        List<StudentResponseDto> getStudents = studentService.getAllStudents();
 
         Assertions.assertThat(getStudents).isNotNull();
         Assertions.assertThat(getStudents.size()).isEqualTo(2);
@@ -166,7 +167,7 @@ class StudentServiceImplTest {
 
         when(studentRepository.findAllByActiveStatus(activeStatus)).thenReturn(Collections.singletonList(student));
 
-        List<StudentDto> getSubjects = studentService.getAllStudentsByActiveStatus(activeStatus);
+        List<StudentResponseDto> getSubjects = studentService.getAllStudentsByActiveStatus(activeStatus);
 
         Assertions.assertThat(getSubjects).isNotNull();
         Assertions.assertThat(getSubjects.size()).isEqualTo(1);
