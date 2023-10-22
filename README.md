@@ -2,6 +2,8 @@
 
 The Student Management System is a Spring Boot API project designed for managing students data. This README provides an overview of the project and instructions on how to set it up using Docker Compose.
 
+#### [Check out the Documentation in GitHub Pages site](https://dspchathuranga.github.io/student-manager/)
+
 ## Table of Contents
 - [Project Overview](#project-overview)
 - [Prerequisites](#prerequisites)
@@ -39,11 +41,11 @@ To get started with the Student Management System, follow these steps:
 2. Build the project using Maven:
 
     ```sh
-    cd student-management-system
+    cd student-management
     mvn clean install -DskipTests
     ```
 
-3. You can change environment variables `docker-compose.yml` file in the project directory:
+3. You can change environment variables `docker-compose.yaml` file in the project directory:
 
     ```yaml
     version: '3.8'
@@ -96,8 +98,6 @@ The API documentation is available via Swagger, which allows you to interact wit
 ## Running Tests
 
 Testing is an essential part of ensuring the quality and correctness of the Student Management System. We use [JUnit](https://junit.org/junit5/) in combination with [Spring Test](https://spring.io/guides/gs/testing/).
-
-### Prerequisites
 
 Before running the tests, make sure the `application.properties` configuration:
 
